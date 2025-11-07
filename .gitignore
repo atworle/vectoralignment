@@ -1,0 +1,25 @@
+# Python cache and build files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+
+# Virtual environment folders
+venv/
+.env/
+env/
+.venv/
+
+# IDE / editor files
+.vscode/
+.idea/
+*.swp
+
+# OS / misc
+.DS_Store
+Thumbs.db
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
+

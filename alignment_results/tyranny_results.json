@@ -1,0 +1,164 @@
+{
+  "tyranny_period_similarities": {
+    "1756-1764 \u2192 1765-1776": 0.6183938088669022,
+    "1765-1776 \u2192 1777-1783": 0.8047206814528766,
+    "1756-1764 \u2192 1777-1783": 0.6500610213607956
+  },
+  "tyranny_popery_association": {
+    "1756-1764": 0.6105113625526428,
+    "1765-1776": 0.8450803571065447,
+    "1777-1783": 0.621591787270165
+  },
+  "tyranny_neighbors": [
+    {
+      "Period": "1756-1764",
+      "Neighbor": "rapine",
+      "Cosine_Similarity": 0.9275637594960514
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "emulation",
+      "Cosine_Similarity": 0.8924221901521755
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "jealousy",
+      "Cosine_Similarity": 0.8873436799053854
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "igno",
+      "Cosine_Similarity": 0.8854986695666293
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "steady",
+      "Cosine_Similarity": 0.8841763124670017
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "indignation",
+      "Cosine_Similarity": 0.8811942272283407
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "molt",
+      "Cosine_Similarity": 0.879539700601335
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "condutt",
+      "Cosine_Similarity": 0.8790411456971102
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "patron",
+      "Cosine_Similarity": 0.8765900791710417
+    },
+    {
+      "Period": "1756-1764",
+      "Neighbor": "creator",
+      "Cosine_Similarity": 0.8740554989739443
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "oppression",
+      "Cosine_Similarity": 0.9243477434014024
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "slavery",
+      "Cosine_Similarity": 0.9064587090672944
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "oppreflion",
+      "Cosine_Similarity": 0.8888712254460956
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "arbitrary",
+      "Cosine_Similarity": 0.8832214742341198
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "unnatural",
+      "Cosine_Similarity": 0.8713069595838602
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "discord",
+      "Cosine_Similarity": 0.8697404587497979
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "despotic",
+      "Cosine_Similarity": 0.8619676928920512
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "popery",
+      "Cosine_Similarity": 0.8450803571065448
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "perfidious",
+      "Cosine_Similarity": 0.8442384719283428
+    },
+    {
+      "Period": "1765-1776",
+      "Neighbor": "corruption",
+      "Cosine_Similarity": 0.8413668607451362
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "smiles",
+      "Cosine_Similarity": 0.8812331299403775
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "ruin",
+      "Cosine_Similarity": 0.8728846022867076
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "rage",
+      "Cosine_Similarity": 0.8722478532293011
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "brutal",
+      "Cosine_Similarity": 0.8717602593408028
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "pride",
+      "Cosine_Similarity": 0.8614692803825593
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "ambition",
+      "Cosine_Similarity": 0.8593152829170315
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "violence",
+      "Cosine_Similarity": 0.8553422539856871
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "kindled",
+      "Cosine_Similarity": 0.8526494455490103
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "envy",
+      "Cosine_Similarity": 0.8509006328770093
+    },
+    {
+      "Period": "1777-1783",
+      "Neighbor": "heaven",
+      "Cosine_Similarity": 0.8451434475723063
+    }
+  ]
+}
