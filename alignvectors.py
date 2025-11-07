@@ -101,6 +101,10 @@ pop1 = get_vec_period("popery", "1756-1764")
 pop2 = get_vec_period("popery", "1765-1776")
 pop3 = get_vec_period("popery", "1777-1783")
 
+lib1 = get_vec_period("liberty", "1756-1764")
+lib2 = get_vec_period("liberty", "1765-1776")
+lib3 = get_vec_period("liberty", "1777-1783")
+
 tyr_pop = {
     "1756-1764": cosine(tyr1, pop1),
     "1765-1776": cosine(tyr2, pop2),
@@ -108,6 +112,17 @@ tyr_pop = {
 }
 print(tyr_pop)
 
+popery_similarities = {
+    "1756-1764 → 1765-1776": cosine(pop1, pop2),
+    "1765-1776 → 1777-1783": cosine(pop2, pop3),
+    "1756-1764 → 1777-1783": cosine(pop1, pop3),
+}
+print(popery_similarities)
+liberty_similarities = {
+    "1756-1764 → 1765-1776": cosine(lib1, lib2),
+    "1765-1776 → 1777-1783": cosine(lib2, lib3),
+    "1756-1764 → 1777-1783": cosine(lib1, lib3),
+}
 # -----------------------------------------
 # 5) Nearest neighbors from a raw matrix M
 #    (like your nearest_from_matrix in R)
@@ -179,6 +194,8 @@ results = {
     "tyranny_period_similarities": similarities,
     "tyranny_popery_association": tyr_pop,
     "tyranny_neighbors": neighbors_data,
+    "poppery_sim": popery_similarities,
+    "liberty_sim": liberty_similarities,
 }
 with open(output_dir / "tyranny_results.json", "w", encoding="utf-8") as f:
     json.dump(results, f, indent=2)
