@@ -44,11 +44,7 @@ for _, row in period_corpus.iterrows():
 #     (bundle_ngrams = 1 in your R → just unigrams)
 # ---------------------------------------------------
 def clean_to_lines(text: str) -> list[str]:
-    """
-    Simple cleaner: lowercase & tokenize to unigrams with gensim's simple_preprocess.
-    Return as a single 'sentence' line so it's close to your R pipeline,
-    which writes space-separated tokens.
-    """
+  
     tokens = simple_preprocess(text, deacc=False, min_len=2, max_len=30)
     return [" ".join(tokens)]
 
