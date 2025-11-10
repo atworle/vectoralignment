@@ -67,14 +67,14 @@ def sentence_iter_from_textfile(path: Path):
             yield line.strip().split()
 
 combined_model = Word2Vec(
-    sentences=sentence_iter_from_textfile(combined_clean_path),
-    vector_size=25,    
+    corpus_file=str(combined_clean_path), 
+    vector_size=100,    
     window=7,          
     sg=1,              
     negative=5,      
     epochs=10,       
-    workers=2,      
-    min_count=5     
+    workers=6,      
+    min_count=10     
 )
 
 # Save in word2vec binary format (close to "vectorsv2.bin")
@@ -102,13 +102,13 @@ for p in periods:
 
     # Train the per-period model
     per_period_model = Word2Vec(
-        sentences=sentence_iter_from_textfile(clean_file),
-        vector_size=25,
+        corpus_file=str(clean_file),  
+        vector_size=100,
         window=7,
         sg=1,
         negative=5,
         epochs=10,
-        workers=2,
+        workers=6,
         min_count=5
     )
 
