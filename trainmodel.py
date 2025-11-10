@@ -68,13 +68,13 @@ def sentence_iter_from_textfile(path: Path):
 
 combined_model = Word2Vec(
     sentences=sentence_iter_from_textfile(combined_clean_path),
-    vector_size=25,     # vectors = 25
-    window=7,           # window = 7
-    sg=1,               # negative sampling setup typically goes with skip-gram; R's defaults are skip-gram
-    negative=5,         # negative_samples = 5
-    epochs=10,          # iter = 10
-    workers=2,          # threads = 2
-    min_count=5         # typical default; adjust if you want exact parity with your R run
+    vector_size=25,    
+    window=7,          
+    sg=1,              
+    negative=5,      
+    epochs=10,       
+    workers=2,      
+    min_count=5     
 )
 
 # Save in word2vec binary format (close to "vectorsv2.bin")
@@ -94,7 +94,7 @@ for p in periods:
         # skip if that bucket didn't produce a file
         continue
 
-    # Clean this period text into its own file (like your second prep_word2vec call)
+    
     raw_text = input_file.read_text(encoding="utf-8")
     clean_lines = clean_to_lines(raw_text)
     clean_file = output_dir / f"{p}.txt"
@@ -112,7 +112,7 @@ for p in periods:
         min_count=5
     )
 
-    # Save binary vectors (like "{period}_vectors.bin")
+   
     (per_period_model.wv).save_word2vec_format(output_dir / f"{p}_vectors.bin", binary=True)
 
 print("Done. Models saved to:")
