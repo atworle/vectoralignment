@@ -194,7 +194,7 @@ results = {
     "tyranny_period_similarities": similarities,
     "tyranny_popery_association": tyr_pop,
     "tyranny_neighbors": neighbors_data,
-    "poppery_sim": popery_similarities,
+    "popery_sim": popery_similarities,
     "liberty_sim": liberty_similarities,
 }
 with open(output_dir / "tyranny_results.json", "w", encoding="utf-8") as f:
