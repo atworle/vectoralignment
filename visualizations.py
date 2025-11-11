@@ -17,6 +17,13 @@ MODEL_PATHS = {
     "1765-1776": "period_models/1765-1776_vectors.bin",
     "1777-1783": "period_models/1777-1783_vectors.bin",
 }
+# Probe categories (tweak to your corpus)
+PROBES = {
+    "religious":  ["religion","church","priest","papist","papists","catholic","romish","popish","bishop","mass"],
+    "institution":["parliament","ministry","constitution","governor","crown","assembly","administration"],
+    "moral":      ["virtue","vice","corruption","despotism","licentiousness"],
+    "emotion":    ["fear","anger","indignation","zeal","alarm","resentment"]
+}
 
 OUTDIR = Path("alignment_plots")
 OUTDIR.mkdir(parents=True, exist_ok=True)
@@ -24,6 +31,12 @@ OUTDIR.mkdir(parents=True, exist_ok=True)
 # ---------------------------
 # Core math / alignment utils
 # ---------------------------
+def present_words_in_vocab(words, vocab_set):
+    return [w for w in words if w in vocab_set]
+
+def centroid_from_matrix(M: np.ndarray, indices: List[int]) -> np.ndarray | None:
+    if not indices: return None
+    return M[indices].mean(axis=0)
 
 def cosine(a: np.ndarray, b: np.ndarray) -> float:
     da = np.linalg.norm(a)
@@ -192,7 +205,7 @@ def save_neighborhood_scatter(target: str,
         plt.scatter(points[0, 0], points[0, 1], marker="*", s=150)
 
         # annotate a few closest neighbors
-        for i in range(1, min(6, points.shape[0])):  # annotate 5 nearest by order
+        for i in range(1,min(8,points.shape[0])):  # annotate 5 nearest by order
             plt.text(points[i, 0], points[i, 1], words[i], fontsize=8, alpha=0.8)
 
     draw(pts1, words_1, "1756-1764")
@@ -201,6 +214,121 @@ def save_neighborhood_scatter(target: str,
 
     plt.title(title)
     plt.legend()
+    plt.tight_layout()
+    plt.savefig(filename, dpi=220)
+    plt.close()
+def save_neighborhood_scatter_with_centroids(
+    target: str,
+    neighbors: int,
+    m1, m2_aligned_mat, m3_aligned_mat,
+    vocab: List[str], idx: dict,
+    probe_sets: dict,
+    focus_words: List[str],
+    title: str, filename: Path
+):
+    if target not in idx:
+        raise KeyError(f"'{target}' not in shared vocabulary.")
+
+    # Aligned spaces over the same vocab order
+    M1 = matrix_from_kv(m1, vocab)
+    M2 = m2_aligned_mat
+    M3 = m3_aligned_mat
+    VSET = set(vocab)
+
+    def nearest_from_matrix(M: np.ndarray, w: str, k=15):
+        wi = idx[w]
+        Mn = M / np.maximum(np.linalg.norm(M, axis=1, keepdims=True), 1e-12)
+        v = Mn[wi]
+        sims = Mn @ v
+        sims[wi] = -np.inf
+        k = min(k, len(vocab) - 1)
+        top = np.argpartition(-sims, kth=k)[:k]
+        top = top[np.argsort(-sims[top])]
+        return [(vocab[i], float(sims[i])) for i in top]
+
+    k = max(2, neighbors)
+
+    # Target neighborhoods per period
+    n1 = nearest_from_matrix(M1, target, k=k)
+    n2 = nearest_from_matrix(M2, target, k=k)
+    n3 = nearest_from_matrix(M3, target, k=k)
+
+    words_1 = [target] + [w for w, _ in n1]
+    words_2 = [target] + [w for w, _ in n2]
+    words_3 = [target] + [w for w, _ in n3]
+
+    vecs_1 = np.vstack([M1[idx[w]] for w in words_1])
+    vecs_2 = np.vstack([M2[idx[w]] for w in words_2])
+    vecs_3 = np.vstack([M3[idx[w]] for w in words_3])
+
+    # Joint PCA so all three panels share the same projection
+    ALL = np.vstack([vecs_1, vecs_2, vecs_3])
+    p = PCA(n_components=2, random_state=0).fit(ALL)
+    ALL_2D = p.transform(ALL)
+
+    n1n = len(words_1)
+    n2n = len(words_2)
+    pts1 = ALL_2D[:n1n]
+    pts2 = ALL_2D[n1n:n1n+n2n]
+    pts3 = ALL_2D[n1n+n2n:]
+
+    # Precompute probe indices (only words in shared vocab)
+    probe_indices = {
+        cat: [idx[w] for w in present_words_in_vocab(ws, VSET)]
+        for cat, ws in probe_sets.items()
+    }
+
+    # Centroids in vector space, then project via same PCA
+    def project_centroids(M):
+        out = {}
+        for cat, inds in probe_indices.items():
+            c = centroid_from_matrix(M, inds)
+            out[cat] = p.transform(c.reshape(1, -1))[0] if c is not None else None
+        return out
+
+    cent1 = project_centroids(M1)
+    cent2 = project_centroids(M2)
+    cent3 = project_centroids(M3)
+
+    # Plot
+    periods = ["1756-1764", "1765-1776", "1777-1783"]
+    fig, axes = plt.subplots(1, 3, figsize=(14, 5))
+    panels = [
+        (axes[0], periods[0], words_1, pts1, cent1),
+        (axes[1], periods[1], words_2, pts2, cent2),
+        (axes[2], periods[2], words_3, pts3, cent3),
+    ]
+
+    for ax, period_label, words, pts, cents in panels:
+        # neighbors faint + target star
+        ax.scatter(pts[1:,0], pts[1:,1], alpha=0.5)
+        ax.scatter(pts[0,0], pts[0,1], marker="*", s=150)
+        ax.text(pts[0,0], pts[0,1], target, fontsize=9, weight="bold")
+
+        # annotate a few closest neighbors
+        for i in range(1,min(8, pts.shape[0])):
+            ax.text(pts[i,0], pts[i,1], words[i], fontsize=8, alpha=0.8)
+
+        # **centroids only** (no probe points)
+        for cat, c2 in cents.items():
+            if c2 is not None:
+                ax.scatter(c2[0], c2[1], marker="P", s=130)  # centroid marker
+                ax.text(c2[0]+0.02, c2[1]+0.02, f"{cat} centroid", fontsize=9)
+
+        # dashed lines from focus words to centroids
+        for fw in focus_words:
+            if fw in words:
+                i = words.index(fw)
+                x, y = pts[i]
+                for cat, c2 in cents.items():
+                    if c2 is not None:
+                        ax.plot([x, c2[0]], [y, c2[1]], linestyle="--", linewidth=0.7, alpha=0.6)
+
+        ax.set_title(period_label)
+        ax.set_xlabel("PC1"); ax.set_ylabel("PC2")
+        ax.grid(alpha=0.15)
+
+    plt.suptitle(title)
     plt.tight_layout()
     plt.savefig(filename, dpi=220)
     plt.close()
@@ -303,7 +431,19 @@ def main():
         )
     except KeyError:
         print(f"[skip] Neighborhood scatter: '{tgt}' not in shared vocab.")
-
+    try: 
+         save_neighborhood_scatter_with_centroids(
+            target=tgt,
+            neighbors=max(2, args.neighbors),
+            m1=m1, m2_aligned_mat=m2_aligned, m3_aligned_mat=m3_aligned,
+            vocab=vocab, idx=idx,
+            probe_sets=PROBES,
+            focus_words=["popery","government"],  # customize
+            title=f"Neighborhoods of '{tgt}' with Thematic Vocab Centroids",
+            filename=OUTDIR / f"neighbors_{tgt}_centroids.png",
+        )
+    except KeyError:
+        print(f"[skip] Neighborhood+centroids: '{tgt}' not in shared vocab.")
     # 4) Similarity matrix within each period for a list of targets
     words = [w.lower() for w in args.matrix_words]
     for period in PERIODS:
