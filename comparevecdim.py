@@ -110,7 +110,7 @@ for period, model_files in pairs.items():
     fig, axes = plt.subplots(1, 2, figsize=(12, 6))
     for ax, title, coords, cents in [
         (axes[0], f"{period} (100-dim)", coords100, cent100),
-        (axes[1], f"{period} (25-dim, min_count=10)", coords25, cent25)
+        (axes[1], f"{period} (25-dim)", coords25, cent25)
     ]:
         # scatter core words
         if "core" in coords:
@@ -153,7 +153,7 @@ for period, model_files in pairs.items():
         ax.legend(loc="best", fontsize=8)
         ax.grid(alpha=0.15)
 
-    plt.suptitle(f"Probe experiment: why did popery & government move?  ({period})")
+    plt.suptitle(f"Probe experiment: How do model results compare?  ({period})")
     plt.tight_layout()
 
     plt.savefig(f"comparemodels/{period}_comparison.png", dpi=300)
