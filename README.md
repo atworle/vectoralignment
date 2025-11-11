@@ -106,9 +106,3 @@ python .\comparevecdim.py --help
 - The central alignment method uses mean-centering and an orthogonal Procrustes-like rotation computed by SVD (`numpy.linalg.svd`) to align target models to the base model.
 - Probe sets for thematic centroids are defined in `visualizations.py` (variable `PROBES`) and can be adjusted to your research questions.
 
-## Contact
-
-If you want help adapting the scripts to other corpora, adding new probes, or extending visualizations, open an issue or edit this README with suggested improvements.
-
----
-Generated README to describe repository scripts and usage. Use `--help` on each script for more detailed flags.
